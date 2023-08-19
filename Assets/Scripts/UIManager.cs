@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _restartText;
 
     [SerializeField] private Image _livesDisplay;
-    [SerializeField] private Sprite[] sprites;
+    [SerializeField] private Sprite[] _sprites;
 
     private AudioSource _audioSource;
 
@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int playerLives)
     {
-        _livesDisplay.sprite = sprites[playerLives];
+        _livesDisplay.sprite = _sprites[playerLives];
         if (playerLives == 0)
         {
             _audioSource.Play();

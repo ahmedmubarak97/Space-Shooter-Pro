@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
 
+        ManualSpeedBoost();
+
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
             FireWeapon();
 
@@ -75,6 +77,14 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(_leftXLimit, transform.position.y, 0);
         else if (transform.position.x <= _leftXLimit)
             transform.position = new Vector3(_rightXLimit, transform.position.y, 0);
+    }
+
+    void ManualSpeedBoost()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+            _speed *= 1.5f;
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+            _speed /= 1.5f;
     }
 
     public void IncreaseScore(int points)
@@ -133,7 +143,7 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
         if (_speed == 4.5)
-            _speed *= 2;
+            _speed *= 3;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
