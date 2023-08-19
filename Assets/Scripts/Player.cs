@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int _ammo = 15;
     private bool _hasAmmo;
 
-    private GameObject _rightEngine, _leftEngine;
+    [SerializeField] private GameObject _rightEngine, _leftEngine;
 
     void Start()
     {
@@ -54,9 +54,6 @@ public class Player : MonoBehaviour
             Debug.LogError("UI Manager is NULL.");
         if (_audioSource == null)
             Debug.LogError("Audio Source on Player is NULL.");
-
-        _rightEngine = transform.GetChild(2).gameObject;
-        _leftEngine = transform.GetChild(3).gameObject;
     }
 
     void Update()
