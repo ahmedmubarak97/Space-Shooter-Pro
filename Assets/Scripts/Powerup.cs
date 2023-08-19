@@ -34,6 +34,8 @@ public class Powerup : MonoBehaviour
                     col.GetComponent<Player>().SpeedBoostActive(); break;
                 case 2:
                     col.GetComponent<Player>().ShieldActive(); break;
+                case 3:
+                    col.GetComponent<Player>().AmmoRefill(); break;
                 default: break;
             }
             Destroy(gameObject);

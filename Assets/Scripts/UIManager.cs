@@ -8,10 +8,12 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _gameOverText;
-    [SerializeField] private Text _restartText;
+    [SerializeField] private Text _restartText, _noAmmoText;
 
     [SerializeField] private Image _livesDisplay;
-    [SerializeField] private Sprite[] _sprites;
+    [SerializeField] private Sprite[] _livesSprites;
+
+    [SerializeField] private Image[] _ammoDisplay;
 
     private AudioSource _audioSource;
 
@@ -34,12 +36,37 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int playerLives)
     {
-        _livesDisplay.sprite = _sprites[playerLives];
+        _livesDisplay.sprite = _livesSprites[playerLives];
         if (playerLives == 0)
         {
+            // WILL HAVE AUDIO CLIP FOR 0 AMMO SO ASSIGN EXPLOSION AUDIO CLIP THRU CODE INSTEAD OF HAVING IT IN INSPECTOR DIRECTLY
             _audioSource.Play();
             GameOver();
         }
+    }
+
+    public void UpdateAmmo(int playerAmmo)
+    {
+        _ammoDisplay[playerAmmo].gameObject.SetActive(false);
+    }
+
+    public void ResetAmmo()
+    {
+        foreach (Image img in _ammoDisplay)
+            img.gameObject.SetActive(true);
+
+    }
+
+    public void NoAmmoPrompt()
+    {
+        _noAmmoText.gameObject.SetActive(true);
+        StartCoroutine(NoAmmoPromptDeactivate());
+    }
+
+    IEnumerator NoAmmoPromptDeactivate()
+    {
+        yield return new WaitForSeconds(1);
+        _noAmmoText.gameObject.SetActive(false);
     }
 
     public void GameOver()

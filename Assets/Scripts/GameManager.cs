@@ -11,9 +11,9 @@ public class GameManager : MonoBehaviour
     {
         if (_isGameOver && Input.GetKeyDown(KeyCode.R))
             ReloadGame();
-        //if (!_isGameOver && Input.GetKeyDown(KeyCode.Escape))
-        //    PauseGame();
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (!_isGameOver && Input.GetKeyDown(KeyCode.P))
+            PauseGame();
+        if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
 
     }

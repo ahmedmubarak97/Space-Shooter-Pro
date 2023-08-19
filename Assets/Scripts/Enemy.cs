@@ -40,12 +40,18 @@ public class Enemy : MonoBehaviour
         {
             _fireRate = Random.Range(3f, 7f);
             _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-            for(int i = 0; i < lasers.Length; i++)
-                lasers[i].AssignEnemyLaser();
+            StartCoroutine(EnemyLaserFireDelay());
         }
+    }
+
+    IEnumerator EnemyLaserFireDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+
+        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+        for (int i = 0; i < lasers.Length; i++)
+            lasers[i].AssignEnemyLaser();
     }
 
     void CalculateMovement()
@@ -59,14 +65,19 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Laser") || collision.gameObject.tag.Equals("Player"))
         {
-            if (collision.gameObject.tag.Equals("Laser"))
-            {
-                Destroy(collision.gameObject);
-                if (_player != null)
-                    _player.IncreaseScore(10);
-            }
-            else
+            if(collision.gameObject.tag.Equals("Player"))
                 collision.GetComponent<Player>().Damage();
+            else
+            {
+                if (collision.gameObject.GetComponent<Laser>().IsEnemyLaser())
+                    return;
+                else
+                {
+                    Destroy(collision.gameObject);
+                    if (_player != null)
+                        _player.IncreaseScore(10);
+                }
+            }
 
             Destroy(GetComponent<Collider2D>());
             _anim.SetTrigger("OnEnemyDeath");

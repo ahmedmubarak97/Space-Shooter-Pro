@@ -23,8 +23,9 @@ public class Laser : MonoBehaviour
         if(collision.tag == "Player" && _isEnemyLaser)
         {
             Player player = collision.GetComponent<Player>();
-            if(player != null )
-                player.Damage();
+            if (player != null)
+                 player.Damage();
+           //     player.LaserDamage();
         }
     }
 
@@ -53,5 +54,10 @@ public class Laser : MonoBehaviour
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+    }
+
+    public bool IsEnemyLaser()
+    {
+        return _isEnemyLaser;
     }
 }
