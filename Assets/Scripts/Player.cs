@@ -158,14 +158,67 @@ public class Player : MonoBehaviour
         
     }
 
-    //public void LaserDamage()
-    //{
-    //    int damage = 1;
-    //    Damage();
-    //    damage++;
-    //    if (damage > 1)
-    //        return;
-    //}
+    public void EnemyLaserDamage()
+    {
+        if (_shieldActive)
+        {
+            _shieldLives--;
+            _playerShield.SetActive(false);
+
+            if (_shieldLives == 2)
+                _playerShieldDamaged1.SetActive(true);
+            else if (_shieldLives == 1)
+            {
+                _playerShieldDamaged1.SetActive(false);
+                _playerShieldDamaged2.SetActive(true);
+            }
+            else
+            {
+                _shieldActive = false;
+                _playerShieldDamaged1.SetActive(false);
+                _playerShieldDamaged2.SetActive(false);
+            }
+        }
+        else
+        {
+            float lives = _lives;
+            lives -= 0.5f;
+            _uiManager.UpdateLives(_lives);
+
+            if (lives == 2)
+                _leftEngine.SetActive(true);
+            else if (lives == 1)
+                _rightEngine.SetActive(true);
+            else if(lives == 0)
+            {
+                _spawnManager.OnPlayerDeath();
+                Destroy(gameObject);
+            }
+        }
+
+    }
+
+    public void AddLife()
+    {
+        _lives++;
+        if (gameObject != null)
+        {
+            if (_lives == 2)
+            {
+                _uiManager.UpdateLives(2);
+                _rightEngine.SetActive(false);
+            }
+            else if (_lives == 3)
+            {
+                _uiManager.UpdateLives(3);
+                _leftEngine.SetActive(false);
+            }
+            else if (_lives > 3)
+                _lives = 3;
+        }
+        
+    }
+
     public void TripleShotActive()
     {
         _tripleShotActive = true;

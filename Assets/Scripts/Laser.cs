@@ -24,8 +24,8 @@ public class Laser : MonoBehaviour
         {
             Player player = collision.GetComponent<Player>();
             if (player != null)
-                 player.Damage();
-           //     player.LaserDamage();
+           //      player.Damage();
+                player.EnemyLaserDamage();
         }
     }
 
@@ -40,7 +40,7 @@ public class Laser : MonoBehaviour
         }
     }
 
-    void MoveDown()
+    public void MoveDown()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < -_maxRange)
