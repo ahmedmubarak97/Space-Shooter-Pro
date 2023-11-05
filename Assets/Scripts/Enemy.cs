@@ -63,11 +63,12 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals("Laser") || collision.gameObject.tag.Equals("Player"))
+        if (collision.gameObject.tag.Equals("Laser") || collision.gameObject.tag.Equals("Player") || collision.gameObject.tag.Equals("SuperLaser"))
         {
             if(collision.gameObject.tag.Equals("Player"))
                 collision.GetComponent<Player>().Damage();
-            else
+
+            else if (collision.gameObject.tag.Equals("Laser"))
             {
                 if (collision.gameObject.GetComponent<Laser>().IsEnemyLaser())
                     return;
@@ -78,6 +79,10 @@ public class Enemy : MonoBehaviour
                         _player.IncreaseScore(10);
                 }
             }
+
+            else
+                if (_player != null)
+                    _player.IncreaseScore(10);
 
             Destroy(GetComponent<Collider2D>());
             _anim.SetTrigger("OnEnemyDeath");

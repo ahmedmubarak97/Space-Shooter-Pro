@@ -24,8 +24,8 @@ public class Laser : MonoBehaviour
         {
             Player player = collision.GetComponent<Player>();
             if (player != null)
-           //      player.Damage();
-                player.EnemyLaserDamage();
+                 player.Damage();
+              //  player.EnemyLaserDamage();
         }
     }
 

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(0); //Main menu
     }
+
     public void ReloadGame()
     {
         SceneManager.LoadScene(1); //Current game scene

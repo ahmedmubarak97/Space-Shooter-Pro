@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed = 3f;
+    [SerializeField] private float _speed = 3f;
 
     private float _lowerYLimit = -7.0f;
 
@@ -38,6 +37,8 @@ public class Powerup : MonoBehaviour
                     col.GetComponent<Player>().AmmoRefill(); break;
                 case 4:
                     col.GetComponent<Player>().AddLife(); break;
+                case 5: 
+                    col.GetComponent<Player>().SuperLaserActive(); break;
                 default: break;
             }
             Destroy(gameObject);

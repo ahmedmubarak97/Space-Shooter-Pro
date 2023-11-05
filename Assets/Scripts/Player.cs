@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 //using UnityEditorInternal;
 using UnityEngine;
+//using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +23,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private GameObject _superLaser;
 
     [SerializeField] private GameObject _playerShield, _playerShieldDamaged1, _playerShieldDamaged2;
 
@@ -29,6 +32,7 @@ public class Player : MonoBehaviour
 
     private bool _tripleShotActive;
     private bool _shieldActive;
+    private bool _superLaserActive;
 
     private int _shieldLives;
 
@@ -39,14 +43,20 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameObject _rightEngine, _leftEngine;
 
+    [SerializeField] private CameraShake _camShakeScript;
+
+    [SerializeField] private Slider _thrusterSlider;
+
     void Start()
     {
         transform.position = Vector3.zero;
         _tripleShotActive = false;
         _shieldActive = false;
+        _superLaserActive = false;
         _hasAmmo = true;
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        _thrusterSlider.value = _thrusterSlider.maxValue;
 
         if (_spawnManager == null)
             Debug.LogError("Spawn Manager is NULL.");
@@ -64,6 +74,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _hasAmmo)
             FireWeapon();
+        
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && !_hasAmmo)
             _uiManager.NoAmmoPrompt();
     }
@@ -84,10 +95,32 @@ public class Player : MonoBehaviour
 
     void ManualSpeedBoost()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            _speed *= 1.5f;
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-            _speed /= 1.5f;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if(_speed == 4.5f)
+                _speed *= 1.5f;
+
+            _thrusterSlider.value -= 0.5f * Time.deltaTime;
+
+            if (_thrusterSlider.value == 0)
+                _speed /= 1.5f;
+        }
+        else
+        {
+            if (_speed != 4.5f)
+                _speed /= 1.5f;
+
+            if (_thrusterSlider.value == 0)
+                StartCoroutine(ManualSpeedBoostCooldownRoutine());
+            else
+                _thrusterSlider.value += 0.5f * Time.deltaTime;
+        }
+    }
+
+    IEnumerator ManualSpeedBoostCooldownRoutine()
+    {
+        yield return new WaitForSeconds(3.5f);
+        _thrusterSlider.value += 0.5f * Time.deltaTime;
     }
 
     public void IncreaseScore(int points)
@@ -99,11 +132,11 @@ public class Player : MonoBehaviour
     void FireWeapon()
     {
         _canFire = Time.time + _rateOfFire;
-        if (!_tripleShotActive)
+        if (!_tripleShotActive && !_superLaserActive)
         {
             Vector3 laserSpawn = new Vector3(transform.position.x, transform.position.y + 1, 0);
             Instantiate(_laserPrefab, laserSpawn, Quaternion.identity);
-            
+
             _ammo--;
             if (_ammo <= 0)
             {
@@ -113,12 +146,19 @@ public class Player : MonoBehaviour
             else
                 _uiManager.UpdateAmmo(_ammo);
         }
-        else
+
+        else if (_tripleShotActive && !_superLaserActive)
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+
+        else if (_superLaserActive)
+        {
+            _superLaser.SetActive(true);
+        }
 
         _audioSource.clip = _laserAudioClip; 
         _audioSource.Play();
     }
+
     public void Damage()
     {
         if (_shieldActive)
@@ -155,48 +195,49 @@ public class Player : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        
+
+        StartCoroutine(_camShakeScript.CameraShakeCoroutine());
     }
 
-    public void EnemyLaserDamage()
-    {
-        if (_shieldActive)
-        {
-            _shieldLives--;
-            _playerShield.SetActive(false);
+    //public void EnemyLaserDamage()
+    //{
+    //    if (_shieldActive)
+    //    {
+    //        _shieldLives--;
+    //        _playerShield.SetActive(false);
 
-            if (_shieldLives == 2)
-                _playerShieldDamaged1.SetActive(true);
-            else if (_shieldLives == 1)
-            {
-                _playerShieldDamaged1.SetActive(false);
-                _playerShieldDamaged2.SetActive(true);
-            }
-            else
-            {
-                _shieldActive = false;
-                _playerShieldDamaged1.SetActive(false);
-                _playerShieldDamaged2.SetActive(false);
-            }
-        }
-        else
-        {
-            float lives = _lives;
-            lives -= 0.5f;
-            _uiManager.UpdateLives(_lives);
+    //        if (_shieldLives == 2)
+    //            _playerShieldDamaged1.SetActive(true);
+    //        else if (_shieldLives == 1)
+    //        {
+    //            _playerShieldDamaged1.SetActive(false);
+    //            _playerShieldDamaged2.SetActive(true);
+    //        }
+    //        else
+    //        {
+    //            _shieldActive = false;
+    //            _playerShieldDamaged1.SetActive(false);
+    //            _playerShieldDamaged2.SetActive(false);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        float lives = _lives;
+    //        lives -= 0.5f;
+    //        _uiManager.UpdateLives(_lives);
 
-            if (lives == 2)
-                _leftEngine.SetActive(true);
-            else if (lives == 1)
-                _rightEngine.SetActive(true);
-            else if(lives == 0)
-            {
-                _spawnManager.OnPlayerDeath();
-                Destroy(gameObject);
-            }
-        }
+    //        if (lives == 2)
+    //            _leftEngine.SetActive(true);
+    //        else if (lives == 1)
+    //            _rightEngine.SetActive(true);
+    //        else if(lives == 0)
+    //        {
+    //            _spawnManager.OnPlayerDeath();
+    //            Destroy(gameObject);
+    //        }
+    //    }
 
-    }
+    //}
 
     public void AddLife()
     {
@@ -216,7 +257,6 @@ public class Player : MonoBehaviour
             else if (_lives > 3)
                 _lives = 3;
         }
-        
     }
 
     public void TripleShotActive()
@@ -241,12 +281,19 @@ public class Player : MonoBehaviour
         _playerShield.SetActive(true);
     }
 
+    public void SuperLaserActive()
+    {
+        _superLaserActive = true;
+        StartCoroutine(SuperLaserPowerDownRoutine());
+    }
+
     public void AmmoRefill()
     {
         _ammo = 15;
         _hasAmmo = true;
         _uiManager.ResetAmmo();
     }
+    
     IEnumerator TripleShotPowerDownRoutine()
     {
         while (_tripleShotActive)
@@ -263,6 +310,13 @@ public class Player : MonoBehaviour
         if (_speed != 4.5)
             _speed /= 3;
 
+    }
+
+    IEnumerator SuperLaserPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _superLaserActive = false;
+        _superLaser.SetActive(false);
     }
 
 }
