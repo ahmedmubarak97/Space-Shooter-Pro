@@ -50,6 +50,12 @@ public class UIManager : MonoBehaviour
         _ammoDisplay[playerAmmo].gameObject.SetActive(false);
     }
 
+    public void DepleteAmmo()
+    {
+        foreach (Image img in _ammoDisplay)
+            img.gameObject.SetActive(false);
+    }
+
     public void ResetAmmo()
     {
         foreach (Image img in _ammoDisplay)

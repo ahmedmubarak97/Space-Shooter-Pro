@@ -361,6 +361,7 @@ MonoBehaviour:
   - {fileID: 6931543740146464974, guid: a3e0de9a398370c40a60837a37498b6f, type: 3}
   - {fileID: 6749927302314933784, guid: 18ff2b6435389d14e9ee81b106cec8c0, type: 3}
   - {fileID: 4060085295435889901, guid: 877c98d515752a74db1110b0967c76c6, type: 3}
+  - {fileID: 6749927302314933784, guid: 24aa018212e72694c8cb4dc3e5e19332, type: 3}
   _player: {fileID: 1552694346}
 --- !u!4 &109664642
 Transform:

@@ -39,6 +39,8 @@ public class Powerup : MonoBehaviour
                     col.GetComponent<Player>().AddLife(); break;
                 case 5: 
                     col.GetComponent<Player>().SuperLaserActive(); break;
+                case 6:
+                    col.GetComponent<Player>().DepleteAmmo(); break;
                 default: break;
             }
             Destroy(gameObject);

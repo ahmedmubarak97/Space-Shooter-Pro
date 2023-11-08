@@ -294,6 +294,13 @@ public class Player : MonoBehaviour
         _uiManager.ResetAmmo();
     }
     
+    public void DepleteAmmo()
+    {
+        _ammo = 0;
+        _hasAmmo = false;
+        _uiManager.DepleteAmmo();
+    }
+
     IEnumerator TripleShotPowerDownRoutine()
     {
         while (_tripleShotActive)
