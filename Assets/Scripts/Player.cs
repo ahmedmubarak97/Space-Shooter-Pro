@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _playerShield, _playerShieldDamaged1, _playerShieldDamaged2;
 
     private AudioSource _audioSource;
-    [SerializeField] private AudioClip _laserAudioClip;    
+    [SerializeField] private AudioClip _laserAudioClip;
 
     private bool _tripleShotActive;
     private bool _shieldActive;
@@ -47,6 +47,10 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Slider _thrusterSlider;
 
+    //[SerializeField] private GameObject superLaser;
+
+    private GameObject[] _pickupsList;
+
     void Start()
     {
         transform.position = Vector3.zero;
@@ -57,6 +61,8 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         _thrusterSlider.value = _thrusterSlider.maxValue;
+
+        _pickupsList = GameObject.FindGameObjectsWithTag("Powerup");
 
         if (_spawnManager == null)
             Debug.LogError("Spawn Manager is NULL.");
@@ -71,6 +77,9 @@ public class Player : MonoBehaviour
         MovePlayer();
 
         ManualSpeedBoost();
+
+        if (Input.GetKeyDown(KeyCode.C))
+            AttractPickup();
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _hasAmmo)
             FireWeapon();
@@ -238,6 +247,24 @@ public class Player : MonoBehaviour
     //    }
 
     //}
+
+    void AttractPickup()
+    {
+        // superLaser.GetComponent<Powerup>().MoveToPlayer();
+
+        List<GameObject> list = _spawnManager.PickupsInScene();
+        
+        foreach(GameObject g in list)
+        {
+            //if (g.transform.position.y - transform.position.y < 3 && g.transform.position.x - transform.position.x < 3)
+            //{
+                g.GetComponent<Powerup>().MoveToPlayer();
+              //  Debug.Log("pickup attracted");
+          //  }
+                
+        }
+        
+    }
 
     public void AddLife()
     {

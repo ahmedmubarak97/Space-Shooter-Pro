@@ -29,7 +29,7 @@ public class Laser : MonoBehaviour
         }
     }
 
-    void MoveUp()
+    public void MoveUp()
     {
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
         if (transform.position.y >= _maxRange)
@@ -55,6 +55,11 @@ public class Laser : MonoBehaviour
     {
         _isEnemyLaser = true;
     }
+
+    //public void UnAssignEnemyLaser()
+    //{
+    //    _isEnemyLaser = false;
+    //}
 
     public bool IsEnemyLaser()
     {

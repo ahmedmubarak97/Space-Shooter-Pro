@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
+    private GameObject _player;
+    
     [SerializeField] private float _speed = 3f;
 
     private float _lowerYLimit = -7.0f;
@@ -13,6 +15,11 @@ public class Powerup : MonoBehaviour
 
     [SerializeField] private AudioClip _powerupAudioClip;
 
+    private void Start()
+    {
+        _player = GameObject.Find("Player");
+    }
+
     void Update()
     {
         transform.Translate(Vector3.down * Time.deltaTime * _speed);
@@ -20,6 +27,12 @@ public class Powerup : MonoBehaviour
             Destroy(gameObject);
     }
 
+    public void MoveToPlayer()
+    {
+        //if(transform.position.y - _player.transform.position.y < 3 && transform.position.x - _player.transform.position.x < 3)
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, 3 * Time.deltaTime);
+    }
+    
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.tag.Equals("Player") && col.GetComponent<Player>() != null)

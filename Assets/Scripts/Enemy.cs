@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -36,12 +37,23 @@ public class Enemy : MonoBehaviour
     {
         CalculateMovement();
 
+        StartCoroutine(AggressiveEnemyStartRoutine());
+
         if(Time.time > _canFire)
         {
-            _fireRate = Random.Range(3f, 7f);
-            _canFire = Time.time + _fireRate;
-            StartCoroutine(EnemyLaserFireDelay());
-        }
+          //  if (transform.position.y >= _player.transform.position.y)
+          //  {
+                _fireRate = Random.Range(3f, 7f);
+                _canFire = Time.time + _fireRate;
+                StartCoroutine(EnemyLaserFireDelay());
+       // }
+        //else
+        //{
+        //    _fireRate = Random.Range(3f, 7f);
+        //    _canFire = Time.time + _fireRate;
+        //    StartCoroutine(EnemyLaserBackwardsFireDelay());
+        //}
+           }
     }
 
     IEnumerator EnemyLaserFireDelay()
@@ -54,11 +66,49 @@ public class Enemy : MonoBehaviour
             lasers[i].AssignEnemyLaser();
     }
 
+
+    //void FireBackwards()
+    //{
+
+    //}
+    //IEnumerator EnemyLaserBackwardsFireDelay()
+    //{
+    //    yield return new WaitForSeconds(0.5f);
+    //    GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+
+    //    Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+    //    for (int i = 0; i < lasers.Length; i++)
+    //        lasers[i].MoveUp();
+    //}
+
     void CalculateMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < _lowerYLimit)
             transform.position = new Vector3(Random.Range(-7.5f, 7.5f), _maxY, 0);
+
+        //if(transform.position.y < _player.transform.position.y)
+        //{
+
+        //}
+    }
+
+    //void DodgePlayerLaser()
+    //{
+    //    //IF LASER IS WITHIN RANGE, MOVETOWARDS LASER BUT WITH NEGATIVE MULTIPLE X TIME.DELTATIME
+    //}
+    
+    void RamPlayer()
+    {
+        if (transform.position.y - _player.transform.position.y < 3 && transform.position.x - _player.transform.position.x < 3)
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, 7 * Time.deltaTime);
+    }
+
+    IEnumerator AggressiveEnemyStartRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        RamPlayer();
+        yield return new WaitForSeconds(7);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -72,7 +122,7 @@ public class Enemy : MonoBehaviour
             {
                 if (collision.gameObject.GetComponent<Laser>().IsEnemyLaser())
                     return;
-                else
+                else  // if(!collision.gameObject.GetComponent<Laser>().IsEnemyLaser() || transform.position.y >= _player.transform.position.y)
                 {
                     Destroy(collision.gameObject);
                     if (_player != null)
