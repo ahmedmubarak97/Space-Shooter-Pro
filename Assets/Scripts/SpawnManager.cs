@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
     private int _wave;
     private int _enemyCount;
   
-    private List<GameObject> _pickupsInScene;
+ //   private List<GameObject> _pickupsInScene;
 
     private void Start()
     {
@@ -30,7 +30,9 @@ public class SpawnManager : MonoBehaviour
     public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnPowerupRoutine());
+     //   StartCoroutine(SpawnPowerupRoutine());
+
+        StartCoroutine(BalancedSpawnPowerupRoutine());
     }
 
     public void OnPlayerDeath()
@@ -59,7 +61,22 @@ public class SpawnManager : MonoBehaviour
         StartSpawning();
     }
 
-    IEnumerator SpawnPowerupRoutine()
+    //IEnumerator SpawnPowerupRoutine()
+    //{
+    //    yield return new WaitForSeconds(1.75f);
+
+    //    while (_player != null)
+    //    {
+    //        int randomPowerupIndex = Random.Range(0, _powerups.Length);
+    //        Instantiate(_powerups[randomPowerupIndex], new Vector3(Random.Range(-7.5f, 7.5f), 7.0f, 0), Quaternion.identity);
+
+    //   //     _pickupsInScene.Add(_powerups[randomPowerupIndex]);
+
+    //        yield return new WaitForSeconds(Random.Range(3f, 7f));
+    //    }
+    //}
+
+    IEnumerator BalancedSpawnPowerupRoutine()
     {
         yield return new WaitForSeconds(1.75f);
 
@@ -68,15 +85,17 @@ public class SpawnManager : MonoBehaviour
             int randomPowerupIndex = Random.Range(0, _powerups.Length);
             Instantiate(_powerups[randomPowerupIndex], new Vector3(Random.Range(-7.5f, 7.5f), 7.0f, 0), Quaternion.identity);
 
-            _pickupsInScene.Add(_powerups[randomPowerupIndex]);
-            
-            yield return new WaitForSeconds(Random.Range(3f, 7f));
+            if(randomPowerupIndex == 4)
+                yield return new WaitForSeconds(7);
+            else
+                yield return new WaitForSeconds(2);
+            //     _pickupsInScene.Add(_powerups[randomPowerupIndex]);
         }
     }
 
-    public List<GameObject> PickupsInScene()
-    {
-        return _pickupsInScene;
-    }
+    //public List<GameObject> PickupsInScene()
+    //{
+    //    return _pickupsInScene;
+    //}
 
 }

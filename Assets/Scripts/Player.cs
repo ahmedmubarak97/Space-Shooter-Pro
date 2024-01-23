@@ -78,8 +78,8 @@ public class Player : MonoBehaviour
 
         ManualSpeedBoost();
 
-        if (Input.GetKeyDown(KeyCode.C))
-            AttractPickup();
+        //if (Input.GetKeyDown(KeyCode.C))
+        //    AttractPickup();
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _hasAmmo)
             FireWeapon();
@@ -248,23 +248,23 @@ public class Player : MonoBehaviour
 
     //}
 
-    void AttractPickup()
-    {
-        // superLaser.GetComponent<Powerup>().MoveToPlayer();
+    //void AttractPickup()
+    //{
+    //    // superLaser.GetComponent<Powerup>().MoveToPlayer();
 
-        List<GameObject> list = _spawnManager.PickupsInScene();
+    //    List<GameObject> list = _spawnManager.PickupsInScene();
         
-        foreach(GameObject g in list)
-        {
-            //if (g.transform.position.y - transform.position.y < 3 && g.transform.position.x - transform.position.x < 3)
-            //{
-                g.GetComponent<Powerup>().MoveToPlayer();
-              //  Debug.Log("pickup attracted");
-          //  }
+    //    foreach(GameObject g in list)
+    //    {
+    //        //if (g.transform.position.y - transform.position.y < 3 && g.transform.position.x - transform.position.x < 3)
+    //        //{
+    //            g.GetComponent<Powerup>().MoveToPlayer();
+    //          //  Debug.Log("pickup attracted");
+    //      //  }
                 
-        }
+    //    }
         
-    }
+    //}
 
     public void AddLife()
     {
