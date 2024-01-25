@@ -85,13 +85,21 @@ public class SpawnManager : MonoBehaviour
             int randomPowerupIndex = Random.Range(0, _powerups.Length);
             Instantiate(_powerups[randomPowerupIndex], new Vector3(Random.Range(-7.5f, 7.5f), 7.0f, 0), Quaternion.identity);
 
-            if(randomPowerupIndex == 4)
-                yield return new WaitForSeconds(7);
-            else
-                yield return new WaitForSeconds(2);
+            if (randomPowerupIndex == 5 || randomPowerupIndex == 6)
+                yield return new WaitForSeconds(Random.Range(9f, 11f));
+            else if (randomPowerupIndex == 2 || randomPowerupIndex == 4)
+                yield return new WaitForSeconds(Random.Range(7f, 8.5f));
+            else //if (randomPowerupIndex == 0 || randomPowerupIndex == 1 || randomPowerupIndex == 3)
+                yield return new WaitForSeconds(Random.Range(3f, 5f));
+           
             //     _pickupsInScene.Add(_powerups[randomPowerupIndex]);
         }
     }
+
+    //private void PickupTimerOne()
+    //{
+
+    //}
 
     //public List<GameObject> PickupsInScene()
     //{

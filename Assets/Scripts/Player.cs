@@ -294,7 +294,7 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        if (_speed == 4.5)
+        if (_speed == 4.5f)
             _speed *= 3;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
@@ -341,7 +341,7 @@ public class Player : MonoBehaviour
     {
 
         yield return new WaitForSeconds(7f);
-        if (_speed != 4.5)
+        if (_speed != 4.5f)
             _speed /= 3;
 
     }
